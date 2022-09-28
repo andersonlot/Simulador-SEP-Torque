@@ -1,5 +1,5 @@
-
-const Width = window.innerWidth, Height = window.innerHeight;
+var canvas_div;
+var Width = window.innerWidth, Height = window.innerHeight-110;
 var zomm = 1200;
 var mouseXtemp;
 var mouseYtemp;
@@ -25,8 +25,10 @@ let render = Matter.Render.create({
 
 let canva;
 function setup() {
-
-  canva = createCanvas(Width + 300, Height);
+  canvas_div = document.getElementById("canvas");
+  Width=canvas_div.offsetWidth;
+  Height=canvas_div.offsetHeight;
+  canva = createCanvas(Width , Height);
   canva.parent('canvas');
   leftCanva = createGraphics(Width, Height, WEBGL);
   leftCanvaTop = createGraphics(Width, Height);
@@ -51,7 +53,7 @@ const transmissao3 = new Transmissao(barra2, barra1, 0.05);
 transmissao3.addWorld();
 const barra3 = new Barramento(300, -500);
 barra3.addWorld();
-const transmissao4 = new Transmissao(barra3, barra1, 1);
+const transmissao4 = new Transmissao(barra3, barra1, 0.000000001);
 transmissao4.addWorld();
 const carga2 = new Carga(600, 500);
 carga2.addWorld();
@@ -63,15 +65,25 @@ transmissao5.addWorld();
 Matter.Runner.run(engine);
 Matter.Render.run(render);
 
-
-
+function windowResized() {
+  canvas_div = document.getElementById("canvas");
+  Width=canvas_div.offsetWidth;
+  Height=canvas_div.offsetHeight;
+  resizeCanvas(Width, Height);
+  leftCanva = createGraphics(Width, Height, WEBGL);
+  leftCanvaTop = createGraphics(Width, Height);
+  rightCanva = createGraphics(300, Height);
+}
+var mouseIn;
 function draw() {
+  document.getElementById("canvas").onmouseover = function() { _mouseIn=true; }
+  document.getElementById("canvas").onmouseout  = function() { _mouseIn=false; }
   drawLeftCanva();
   drawRightCanva();
   clear();
   background(0);
   image(leftCanva, 0, 0);
-  image(rightCanva, Width, 0);
+  //image(rightCanva, Width, 0);
   image(leftCanvaTop, 0, 0)
   gerador.torque = 5;
   drawLeftCanvaTop();
@@ -83,10 +95,11 @@ function drawLeftCanvaTop() {
   leftCanvaTop.push();
   leftCanvaTop.noStroke();
   leftCanvaTop.fill(10,10,15,240);
-  leftCanvaTop.translate(50,400);
+  leftCanvaTop.translate(width/2,400);
+  leftCanvaTop.rectMode(CENTER);
   leftCanvaTop.rect(0,0,500,150,10);
   leftCanvaTop.fill(220,200,0);
-  leftCanvaTop.translate(250,100);
+  leftCanvaTop.translate(0,30);
   leftCanvaTop.push();
   leftCanvaTop.rectMode(CENTER);
   leftCanvaTop.rect(0,0,100,30,5);
@@ -110,17 +123,17 @@ var dragY_lerp =-10;
 
 function drawLeftCanva() {
   if(Math.abs(dragSummX-dragX_lerp)>1.5){
-  dragX_lerp=lerp(dragX_lerp,dragSummX,0.06);
+  dragX_lerp=lerp(dragX_lerp,dragSummX,0.1);
   }else{
     dragX_lerp=dragSummX;
   }
   if(Math.abs(dragSummY-dragY_lerp)>1.5){
-  dragY_lerp=lerp(dragY_lerp,dragSummY,0.06);
+  dragY_lerp=lerp(dragY_lerp,dragSummY,0.15);
   }else{
     dragY_lerp=dragSummY;
   }
   leftCanva.clear();
-  leftCanva.background(20);
+  leftCanva.background("#1E1E1E");
   leftCanva.camera(zomm * sin(dragX_lerp / 100), zomm * sin(dragY_lerp / 100), zomm * cos(dragX_lerp / 100), 300, 0, 0);
   leftCanva.ambientLight(100, 100, 100, 10);
   leftCanva.pointLight(100, 100, 100, 100, -1500, -300);
@@ -159,10 +172,9 @@ function mouseWheel(event) {
   }
 }
 function mouseIn() {
-  if (mouseX > 0 && mouseY > 0 && mouseX< width && mouseY< height){
-    return true;
-  }
-  return false;
+
+  return _mouseIn;
+
 }
 function mousePressed(event) {
   if (mouseIn()) {

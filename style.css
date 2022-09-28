@@ -1,18 +1,105 @@
 :root {
     --cor-fundo: #0D1117;
-    --cor-texto-primario:#F0F6FC;
-    --cor-texto-secundario:#8B949E;
-    --amarelo-logo:#FEBF2C;
+    --cor-texto-primario: #F0F6FC;
+    --cor-texto-secundario: #8B949E;
+    --amarelo-logo: #FEBF2C;
+    --altura-header: 60px;
+    --altura-footer: 0px;
+    --largura-coluna-esquerda: 100px;
+    --largura-coluna-direita: 100px;
+    --cor-fundo-header: #3c3c3c;
+    --cor-fundo-footer: #2d2d2d;
+    --cor-fundo-coluna-esquerda: #252526;
+    --cor-fundo-coluna-direita: #252526;
 }
 
 
 ::selection {
-    color:#FFFFFF;
+    color: #FFFFFF;
     background-color: #f8ae00;
 }
 
+html {
+    overflow: hidden;
+}
 
-@media only screen and (max-width: 780px) {
+body {
+    overflow: hidden;
+    color: var(--cor-texto-primario);
+    background-color: var(--cor-fundo-header);
+    font-family: Verdana;
+}
 
+header {
+    background-color: var(--cor-fundo-header);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: var(--altura-header);
+    font-size: 15pt;
 
-  }
+}
+
+div.header-right {
+    font-size: 12pt;
+    position: absolute;
+    right: 2%;
+    top: 33%;
+    margin: auto;
+}
+
+div.header-left {
+    position: absolute;
+    left: 0.5%;
+    top: 25%;
+    margin: auto;
+}
+
+footer {
+    height: var(--altura-footer);
+}
+
+div#canvas {
+    position: absolute;
+    top: var(--altura-header);
+    left: var(--largura-coluna-esquerda);
+    width: calc(100% - var(--largura-coluna-esquerda) - var(--largura-coluna-direita));
+    height: calc(100% - var(--altura-header) - var(--altura-footer));
+}
+
+div#left {
+    z-index: 10;
+    position: absolute;
+    top: var(--altura-header);
+    width: var(--largura-coluna-esquerda);
+    left: 0;
+    height: calc(100% - var(--altura-header) - var(--altura-footer));
+    background-color: var(--cor-fundo-coluna-esquerda);
+    text-align: center;
+}
+
+div#right {
+    z-index: 20;
+    position: absolute;
+    top: var(--altura-header);
+    width: var(--largura-coluna-direita);
+    height: calc(100% - var(--altura-header) - var(--altura-footer));
+    right: 0;
+    background-color: var(--cor-fundo-coluna-direita);
+    text-align: center;
+}
+
+a.link {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+a.link:hover {
+    color: var(--amarelo-logo);
+    text-decoration: none;
+
+}
+
+@media only screen and (max-width: 780px) {}
