@@ -1,5 +1,5 @@
 
-const Width = 600, Height = 600;
+const Width = window.innerWidth, Height = window.innerHeight;
 var zomm = 1200;
 var mouseXtemp;
 var mouseYtemp;
@@ -41,21 +41,21 @@ const barra1 = new Barramento(300);
 barra1.addWorld();
 const carga1 = new Carga(600);
 carga1.addWorld();
-const transmissao1 = new Transmissao(gerador, barra1, 0.005);
+const transmissao1 = new Transmissao(gerador, barra1, 0.1);
 transmissao1.addWorld();
-const transmissao2 = new Transmissao(barra1, carga1, 0.01);
+const transmissao2 = new Transmissao(barra1, carga1, 0.05);
 transmissao2.addWorld();
 const barra2 = new Barramento(300, 500);
 barra2.addWorld();
-const transmissao3 = new Transmissao(barra2, barra1, 0.01);
+const transmissao3 = new Transmissao(barra2, barra1, 0.05);
 transmissao3.addWorld();
 const barra3 = new Barramento(300, -500);
 barra3.addWorld();
-const transmissao4 = new Transmissao(barra3, barra1, 0.01);
+const transmissao4 = new Transmissao(barra3, barra1, 1);
 transmissao4.addWorld();
 const carga2 = new Carga(600, 500);
 carga2.addWorld();
-const transmissao5 = new Transmissao(barra2, carga2, 0.005);
+const transmissao5 = new Transmissao(barra2, carga2, 1);
 transmissao5.addWorld();
 
 
@@ -73,7 +73,7 @@ function draw() {
   image(leftCanva, 0, 0);
   image(rightCanva, Width, 0);
   image(leftCanvaTop, 0, 0)
-  gerador.torque = 2;
+  gerador.torque = 5;
   drawLeftCanvaTop();
 }
 
@@ -109,8 +109,16 @@ var dragX_lerp =100;
 var dragY_lerp =-10;
 
 function drawLeftCanva() {
-  dragX_lerp=lerp(dragX_lerp,dragSummX,0.05);
-  dragY_lerp=lerp(dragY_lerp,dragSummY,0.05);
+  if(Math.abs(dragSummX-dragX_lerp)>1.5){
+  dragX_lerp=lerp(dragX_lerp,dragSummX,0.06);
+  }else{
+    dragX_lerp=dragSummX;
+  }
+  if(Math.abs(dragSummY-dragY_lerp)>1.5){
+  dragY_lerp=lerp(dragY_lerp,dragSummY,0.06);
+  }else{
+    dragY_lerp=dragSummY;
+  }
   leftCanva.clear();
   leftCanva.background(20);
   leftCanva.camera(zomm * sin(dragX_lerp / 100), zomm * sin(dragY_lerp / 100), zomm * cos(dragX_lerp / 100), 300, 0, 0);
@@ -136,7 +144,6 @@ function drawLeftCanva() {
   leftCanva.line(0, -999999, 0, 0, 999999, 0);
   leftCanva.stroke("blue");
   leftCanva.line(0, 0, -999999, 0, 0, 999999);
- 
 }
 
 function drawRightCanva() {
