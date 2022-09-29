@@ -7,8 +7,10 @@ class Gerador {
     * Define a posição do Gerador
     * @param {number} xPosition
     * @param {number} yPosition
+    * @param {number} id
     */
-    constructor(xPosition, yPosition) {
+    constructor(xPosition, yPosition,id) {
+        this.id=id;
         this.type = "gerador";
         this.size = 200;
         this.p = { x: xPosition || 0, y: yPosition || 0 };
@@ -70,9 +72,11 @@ class Barramento {
      * Define a posição do Barramento
      * @param {number} xPosition 
      * @param {number} yPosition 
+     * @param {number} id
      */
     
-    constructor(xPosition, yPosition) {
+    constructor(xPosition, yPosition,id) {
+        this.id=id;
         this.type = "barramento";
         this.size = 200;
         this.p = { x: xPosition || 0, y: yPosition || 0 };
@@ -91,6 +95,7 @@ class Barramento {
             frictionStatic: 1,
             stiffness: 1
         });
+        this.addWorld();
     };
     /**
      * Desenha o Barramento
@@ -116,14 +121,17 @@ class Barramento {
 /**
  * Classe para criar um objeto do tipo barramento carga 
  * @class Carga
+ * 
  */
 class Carga {
     /**
      * Define a posição da Carga
      * @param {number} xPosition 
      * @param {number} yPosition 
+     * @param {number} id
      */
-    constructor(xPosition, yPosition) {
+    constructor(xPosition, yPosition,id) {
+        this.id=id;
         this.type = "barramento de carga";
         this.size = 200;
         this.p = { x: xPosition || 0, y: yPosition || 0 };
@@ -142,6 +150,7 @@ class Carga {
             frictionStatic: 1,
             stiffness: 1
         });
+        this.addWorld();
     };
     /**
     * Desenha a carga
@@ -173,8 +182,10 @@ class Transmissao {
      * @param {Barramento} barrA
      * @param {Barramento} barrB
      * @param {number <= 1} condutividade
+     * @param {number} id
      */
-    constructor(barrA, barrB, condutividade) {
+    constructor(barrA, barrB, condutividade,id) {
+        this.id=id;
         this.barrA = barrA;
         this.barrB = barrB;
         let stiffnessValue = condutividade;
@@ -227,6 +238,7 @@ class Transmissao {
             friction: 0,
             frictionStatic: 1
         });
+        this.addWorld();
     }
     /**
      * Desenha a Transmissão
@@ -301,5 +313,17 @@ class Transmissao {
 
  function novoGrupo(){
     grupos[grupos.length]=new Grupo(grupos.length);
-    grupos[grupos.length-1].partes[0]=new Gerador(0,-(grupos.length-1)*500);
+    grupos[grupos.length-1].partes[0]=new Gerador(0,-(grupos.length-1)*500,0);
+    grupos[grupos.length-1].partes[1]=new Barramento(300,-(grupos.length-1)*500,1);
+    grupos[grupos.length-1].partes[2]=new Carga(600,-(grupos.length-1)*500,2);
+    grupos[grupos.length-1].partes[3]=new Transmissao(grupos[grupos.length-1].partes[0],grupos[grupos.length-1].partes[1],0.005,3);
+    grupos[grupos.length-1].partes[4]=new Transmissao(grupos[grupos.length-1].partes[1],grupos[grupos.length-1].partes[2],0.0005,4);
+
+    let ele = document.getElementById('dados_grupo');
+    ele.innerHTML += '<p class="nome_grupo">Grupo '+grupos[grupos.length-1].id
+    +'</p><p class="item_grupo">'+ grupos[grupos.length-1].partes[0].id +' - '+grupos[grupos.length-1].partes[0].type
+    +'</p><p class="item_grupo">'+ grupos[grupos.length-1].partes[1].id +' - '+grupos[grupos.length-1].partes[1].type
+    +'</p><p class="item_grupo">'+ grupos[grupos.length-1].partes[2].id +' - '+grupos[grupos.length-1].partes[2].type
+    +'</p>';
+    
  }

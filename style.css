@@ -1,12 +1,12 @@
 :root {
     --cor-fundo: #0D1117;
     --cor-texto-primario: #F0F6FC;
-    --cor-texto-secundario: #8B949E;
+    --cor-texto-secundario: #CCCCCC;
     --amarelo-logo: #FEBF2C;
     --altura-header: 60px;
     --altura-footer: 0px;
     --largura-coluna-esquerda: 100px;
-    --largura-coluna-direita: 200px;
+    --largura-coluna-direita: 300px;
     --cor-fundo-header: #3c3c3c;
     --cor-fundo-footer: #2d2d2d;
     --cor-fundo-coluna-esquerda: #252526;
@@ -20,7 +20,8 @@
 }
 
 html {
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 body {
@@ -31,6 +32,7 @@ body {
 }
 
 header {
+    z-index: 100;
     background-color: var(--cor-fundo-header);
     position: fixed;
     top: 0;
@@ -56,11 +58,12 @@ div.header-left {
 }
 
 footer {
+    visibility: hidden;
     height: var(--altura-footer);
 }
 
 div#canvas {
-    position: absolute;
+    position: fixed;
     top: var(--altura-header);
     left: var(--largura-coluna-esquerda);
     width: calc(100% - var(--largura-coluna-esquerda) - var(--largura-coluna-direita));
@@ -68,8 +71,7 @@ div#canvas {
 }
 
 div#left {
-    z-index: 10;
-    position: absolute;
+    position: fixed;
     top: var(--altura-header);
     width: var(--largura-coluna-esquerda);
     left: 0;
@@ -79,14 +81,14 @@ div#left {
 }
 
 div#right {
-    z-index: 20;
     position: absolute;
     top: var(--altura-header);
+    right: 0px;
     width: var(--largura-coluna-direita);
-    height: calc(100% - var(--altura-header) - var(--altura-footer));
-    right: 0;
+    min-height: calc(100% - var(--altura-header) - var(--altura-footer) - 40px);
     background-color: var(--cor-fundo-coluna-direita);
     text-align: center;
+    padding:20px;
 }
 
 a.link {
@@ -112,7 +114,27 @@ input.barra_direita:hover{
     color:#252526;
 }
 
+div.dados_grupo{
+    align-content: left;
+    padding: 4%;
+    background-color: #1E1E1E;
+    border-radius: 5px;
+    width: calc( var(--largura-coluna-direita) - 20px);
+}
 
+p.nome_grupo{
+    margin:0;
+    font-weight: bold;
+    text-align: left;
+    font-size: 10pt;
+    color:var(--cor-texto-secundario);
 
+}
+p.item_grupo{
+    margin: 10px;
+    text-align: left;
+    font-size: 9pt;
+    color:var(--cor-texto-secundario);
+}
 
 @media only screen and (max-width: 780px) {}
