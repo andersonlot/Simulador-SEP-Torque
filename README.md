@@ -8,6 +8,8 @@ Você pode [acessar ao WIKI](https://github.com/andersonlot/Simulador-SEP-Torque
 
 O GearSEP tem como objetivo ser um Simulador de Transmissão de Torque como representação do Sistema Elétrico de Potência. Utilizando Massas girantes e transmissores com elasticidade regulável, conseguimos criar uma aproximação equivalente dos barramentos de geração, transmissão e carga do sistema elétrico. 
 
+![gearSep_amostra](https://user-images.githubusercontent.com/71526682/193050539-1dd46d58-ea5f-42d9-9f26-3dc61be5a0a4.gif)
+
 ## Como funciona? 
 
 O aplicativo permite inserir massas de três tipos: 
