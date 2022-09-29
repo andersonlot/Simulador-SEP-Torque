@@ -1,14 +1,13 @@
-var canvas_div;
-var Width = window.innerWidth, Height = window.innerHeight-110;
-var zomm = 1200;
-var mouseXtemp;
-var mouseYtemp;
-var dragX;
-var dragY;
-var dragSummX = -25;
-var dragSummY = -62;
-var dragSummXTemp = -25;
-var dragSummYTemp = -62;
+var canvas_div; // recieve the canvas when start and when resize window
+var Width = window.innerWidth, Height = window.innerHeight-110; // variáveis contendo dimensões do canvas
+var zomm = 1200; // Valor inicial do Zoom ( quanto maior, mais distante)
+
+// variáveis para navegaçao com mouse
+var mouseTemp=[];
+var drag_value=[];
+var drag_total_value = [-25,-62];
+var drag_total_value_temp = [-25,-62];
+var drag_value_lerp = [100,-10];
 // Calling for Matter.js library
 let engine = Matter.Engine.create();
 let render = Matter.Render.create({
@@ -20,150 +19,125 @@ let render = Matter.Render.create({
     wireframes: false
   }
 });
+Matter.Runner.run(engine);
+Matter.Render.run(render);
+
+const grupos=[];
 
 
 
 let canva;
 function setup() {
   canvas_div = document.getElementById("canvas");
-  Width=canvas_div.offsetWidth;
-  Height=canvas_div.offsetHeight;
-  canva = createCanvas(Width , Height);
+  Width = canvas_div.offsetWidth;
+  Height = canvas_div.offsetHeight;
+  canva = createCanvas(Width, Height);
   canva.parent('canvas');
-  leftCanva = createGraphics(Width, Height, WEBGL);
-  leftCanvaTop = createGraphics(Width, Height);
-  rightCanva = createGraphics(300, Height);
-  aviso=true;
+  layer_0 = createGraphics(Width, Height, WEBGL);
+  layer_1 = createGraphics(Width, Height);
+  aviso = true;
 }
 
 
-const gerador = new Gerador(0);
-gerador.addWorld();
-const barra1 = new Barramento(300);
-barra1.addWorld();
-const carga1 = new Carga(600);
-carga1.addWorld();
-const transmissao1 = new Transmissao(gerador, barra1, 0.1);
-transmissao1.addWorld();
-const transmissao2 = new Transmissao(barra1, carga1, 0.05);
-transmissao2.addWorld();
-const barra2 = new Barramento(300, 500);
-barra2.addWorld();
-const transmissao3 = new Transmissao(barra2, barra1, 0.05);
-transmissao3.addWorld();
-const barra3 = new Barramento(300, -500);
-barra3.addWorld();
-const transmissao4 = new Transmissao(barra3, barra1, 0.000000001);
-transmissao4.addWorld();
-const carga2 = new Carga(600, 500);
-carga2.addWorld();
-const transmissao5 = new Transmissao(barra2, carga2, 1);
-transmissao5.addWorld();
+var _mouseIn;
+
+
+  
+  
+  
+ 
+
+function draw() {
+  
+  let canva_div = document.getElementById("canvas");
+  if (canva_div.parentNode.querySelector(":hover") == canva_div) {
+    _mouseIn = true;
+  } else {
+    _mouseIn = false;
+  }
+  draw_layer_0();
+  image(layer_0, 0, 0);
+  document.getElementById('botao_novo_grupo').addEventListener("click",functionName);
+  
+}
+
+function functionName(){
+  //function defination
+  console.log("HI");
+  novoGrupo();
+  }
+
+function draw_layer_1() {
+  layer_1.clear();
+  if (!aviso) { return; }
+  layer_1.push();
+  layer_1.noStroke();
+  layer_1.fill(10, 10, 15, 240);
+  layer_1.translate(width / 2, 400);
+  layer_1.rectMode(CENTER);
+  layer_1.rect(0, 0, 500, 150, 10);
+  layer_1.fill(220, 200, 0);
+  layer_1.translate(0, 30);
+  layer_1.push();
+  layer_1.rectMode(CENTER);
+  layer_1.rect(0, 0, 100, 30, 5);
+  layer_1.pop();
+  layer_1.fill(20, 20, 50);
+  layer_1.textSize(20);
+  layer_1.textAlign(CENTER, CENTER);
+  layer_1.textStyle(BOLD);
+  layer_1.text("OK", 0, 0);
+  layer_1.translate(0, -50);
+  layer_1.fill(200, 200, 210);
+  layer_1.textSize(18);
+  layer_1.textAlign(CENTER, CENTER);
+  layer_1.textStyle(BOLD);
+  layer_1.text("Bem vindo ao Simulador GearSEP!", 0, 0);
+  layer_1.pop();
+}
 
 
 
-Matter.Runner.run(engine);
-Matter.Render.run(render);
 
+function draw_layer_0() {
+  if (Math.abs(drag_total_value[0] - drag_value_lerp[0]) > 1.5) {
+    drag_value_lerp[0] = lerp(drag_value_lerp[0], drag_total_value[0], 0.1);
+  } else {
+    drag_value_lerp[0] = drag_total_value[0];
+  }
+  if (Math.abs(drag_total_value[1] - drag_value_lerp[1]) > 1.5) {
+    drag_value_lerp[1] = lerp(drag_value_lerp[1], drag_total_value[1], 0.15);
+  } else {
+    drag_value_lerp[1] = drag_total_value[1];
+  }
+  layer_0.clear();
+  layer_0.background("#1E1E1E");
+  layer_0.camera(zomm * sin(drag_value_lerp[0] / 100), zomm * drag_value_lerp[1] / 100, zomm * cos(drag_value_lerp[0] / 100), 300, 0, 0);
+  layer_0.ambientLight(100, 100, 100, 10);
+  layer_0.pointLight(100, 100, 100, 100, -1500, -300);
+  layer_0.stroke(20);
+  layer_0.strokeWeight(2);
+  //começa aqui o conteúdo
+  for(let element in grupos){
+    grupos[element].draw();
+  }
+  
+  // termina aqui o conteúdo
+  layer_0.stroke("red");
+  layer_0.line(-999999, 0, 0, 999999, 0, 0);
+  layer_0.stroke("green");
+  layer_0.line(0, -999999, 0, 0, 999999, 0);
+  layer_0.stroke("blue");
+  layer_0.line(0, 0, -999999, 0, 0, 999999);
+}
 function windowResized() {
   canvas_div = document.getElementById("canvas");
-  Width=canvas_div.offsetWidth;
-  Height=canvas_div.offsetHeight;
+  Width = canvas_div.offsetWidth;
+  Height = canvas_div.offsetHeight;
   resizeCanvas(Width, Height);
-  leftCanva = createGraphics(Width, Height, WEBGL);
-  leftCanvaTop = createGraphics(Width, Height);
-  rightCanva = createGraphics(300, Height);
+  layer_0 = createGraphics(Width, Height, WEBGL);
+  layer_1 = createGraphics(Width, Height);
 }
-var mouseIn;
-function draw() {
-  document.getElementById("canvas").onmouseover = function() { _mouseIn=true; }
-  document.getElementById("canvas").onmouseout  = function() { _mouseIn=false; }
-  drawLeftCanva();
-  drawRightCanva();
-  clear();
-  background(0);
-  image(leftCanva, 0, 0);
-  //image(rightCanva, Width, 0);
-  image(leftCanvaTop, 0, 0)
-  gerador.torque = 5;
-  drawLeftCanvaTop();
-}
-
-function drawLeftCanvaTop() {
-  leftCanvaTop.clear();
-  if(!aviso){return;}
-  leftCanvaTop.push();
-  leftCanvaTop.noStroke();
-  leftCanvaTop.fill(10,10,15,240);
-  leftCanvaTop.translate(width/2,400);
-  leftCanvaTop.rectMode(CENTER);
-  leftCanvaTop.rect(0,0,500,150,10);
-  leftCanvaTop.fill(220,200,0);
-  leftCanvaTop.translate(0,30);
-  leftCanvaTop.push();
-  leftCanvaTop.rectMode(CENTER);
-  leftCanvaTop.rect(0,0,100,30,5);
-  leftCanvaTop.pop();
-  leftCanvaTop.fill(20,20,50);
-  leftCanvaTop.textSize(20);
-  leftCanvaTop.textAlign(CENTER,CENTER);
-  leftCanvaTop.textStyle(BOLD);
-  leftCanvaTop.text("OK",0,0);
-  leftCanvaTop.translate(0,-50);
-  leftCanvaTop.fill(200,200,210);
-  leftCanvaTop.textSize(18);
-  leftCanvaTop.textAlign(CENTER,CENTER);
-  leftCanvaTop.textStyle(BOLD);
-  leftCanvaTop.text("Bem vindo ao Simulador GearSEP!",0,0);
-  leftCanvaTop.pop();
-}
-
-var dragX_lerp =100;
-var dragY_lerp =-10;
-
-function drawLeftCanva() {
-  if(Math.abs(dragSummX-dragX_lerp)>1.5){
-  dragX_lerp=lerp(dragX_lerp,dragSummX,0.1);
-  }else{
-    dragX_lerp=dragSummX;
-  }
-  if(Math.abs(dragSummY-dragY_lerp)>1.5){
-  dragY_lerp=lerp(dragY_lerp,dragSummY,0.15);
-  }else{
-    dragY_lerp=dragSummY;
-  }
-  leftCanva.clear();
-  leftCanva.background("#1E1E1E");
-  leftCanva.camera(zomm * sin(dragX_lerp / 100), zomm * sin(dragY_lerp / 100), zomm * cos(dragX_lerp / 100), 300, 0, 0);
-  leftCanva.ambientLight(100, 100, 100, 10);
-  leftCanva.pointLight(100, 100, 100, 100, -1500, -300);
-  leftCanva.stroke(20);
-  leftCanva.strokeWeight(2);
-  gerador.draw();
-  gerador.att();
-  barra1.draw();
-  carga1.draw();
-  transmissao1.draw();
-  transmissao2.draw();
-  barra2.draw();
-  transmissao3.draw();
-  barra3.draw();
-  transmissao4.draw();
-  carga2.draw();
-  transmissao5.draw();
-  leftCanva.stroke("red");
-  leftCanva.line(-999999, 0, 0, 999999, 0, 0);
-  leftCanva.stroke("green");
-  leftCanva.line(0, -999999, 0, 0, 999999, 0);
-  leftCanva.stroke("blue");
-  leftCanva.line(0, 0, -999999, 0, 0, 999999);
-}
-
-function drawRightCanva() {
-  rightCanva.clear();
-  rightCanva.background(40);
-}
-
 function mouseWheel(event) {
   if (mouseIn()) {
     zomm += event.delta;
@@ -172,30 +146,26 @@ function mouseWheel(event) {
   }
 }
 function mouseIn() {
-
   return _mouseIn;
-
 }
 function mousePressed(event) {
   if (mouseIn()) {
-    mouseXtemp = mouseX;
-    mouseYtemp = mouseY;
+    mouseTemp = [mouseX, mouseY];
     return false;
   }
 }
 function mouseDragged(event) {
   if (mouseIn()) {
-    dragX = -mouseX + mouseXtemp;
-    dragY = -mouseY + mouseYtemp;
-    dragSummX = dragSummXTemp + 0.1 * dragX;
-    dragSummY = dragSummYTemp + 0.1 * dragY;
+    drag_value = [-mouseX + mouseTemp[0],-mouseY + mouseTemp[1]];
+    drag_total_value[0] = drag_total_value_temp[0] + 0.005 * drag_value[0];
+    drag_total_value[1] = drag_total_value_temp[1] + 0.005 * drag_value[1];
+    drag_total_value[1] = Math.max(Math.min(1000, drag_total_value[1]),-1000);
     return false;
   }
 }
 function mouseReleased() {
-  aviso=false;
-  dragSummXTemp = dragSummX;
-  dragSummYTemp = dragSummY;
+  aviso = false;
+  drag_total_value_temp = drag_total_value;
 }
 
 

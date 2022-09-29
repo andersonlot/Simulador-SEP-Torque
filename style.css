@@ -6,7 +6,7 @@
     --altura-header: 60px;
     --altura-footer: 0px;
     --largura-coluna-esquerda: 100px;
-    --largura-coluna-direita: 100px;
+    --largura-coluna-direita: 200px;
     --cor-fundo-header: #3c3c3c;
     --cor-fundo-footer: #2d2d2d;
     --cor-fundo-coluna-esquerda: #252526;
@@ -101,5 +101,18 @@ a.link:hover {
     text-decoration: none;
 
 }
+
+input.barra_direita{
+    margin-top: 20px;
+    color:#252526;
+}
+input.barra_direita:hover{
+    margin-top: 20px;
+    background-color: #f8ae00;
+    color:#252526;
+}
+
+
+
 
 @media only screen and (max-width: 780px) {}

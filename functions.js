@@ -4,7 +4,7 @@
  */
 class Gerador {
     /**
-    * Desenha o Gerador
+    * Define o Gerador
     * @method constructor
     * @param {number} xPosition
     * @param {number} yPosition
@@ -35,13 +35,14 @@ class Gerador {
     * @method draw
     */
     draw() {
-        leftCanva.push();
-        leftCanva.fill(this.color);
-        leftCanva.translate(this.body.position.x, this.body.position.y, 0);
-        leftCanva.rotateX(this.body.angle);
-        leftCanva.rotateZ(-PI / 2);
-        leftCanva.cylinder(this.size, 100, 10);
-        leftCanva.pop();
+        this.att();
+        layer_0.push();
+        layer_0.fill(this.color);
+        layer_0.translate(this.body.position.x, this.body.position.y, 0);
+        layer_0.rotateX(this.body.angle);
+        layer_0.rotateZ(-PI / 2);
+        layer_0.cylinder(this.size, 100, 10);
+        layer_0.pop();
     };
     /**
     * Atualiza calculos de torque a cada frame
@@ -91,13 +92,13 @@ class Barramento {
     * @method draw
     */
     draw() {
-        leftCanva.push();
-        leftCanva.fill(this.color);
-        leftCanva.translate(this.body.position.x, this.body.position.y, 0);
-        leftCanva.rotateX(this.body.angle);
-        leftCanva.rotateZ(-PI / 2);
-        leftCanva.cylinder(this.size, 100, 10);
-        leftCanva.pop();
+        layer_0.push();
+        layer_0.fill(this.color);
+        layer_0.translate(this.body.position.x, this.body.position.y, 0);
+        layer_0.rotateX(this.body.angle);
+        layer_0.rotateZ(-PI / 2);
+        layer_0.cylinder(this.size, 100, 10);
+        layer_0.pop();
     };
     /**
     * Adiciona no mundo
@@ -141,13 +142,13 @@ class Carga {
     * @method draw
     */
     draw() {
-        leftCanva.push();
-        leftCanva.fill(this.color);
-        leftCanva.translate(this.body.position.x, this.body.position.y, 0);
-        leftCanva.rotateX(this.body.angle);
-        leftCanva.rotateZ(-PI / 2);
-        leftCanva.cylinder(this.size, 100, 10);
-        leftCanva.pop();
+        layer_0.push();
+        layer_0.fill(this.color);
+        layer_0.translate(this.body.position.x, this.body.position.y, 0);
+        layer_0.rotateX(this.body.angle);
+        layer_0.rotateZ(-PI / 2);
+        layer_0.cylinder(this.size, 100, 10);
+        layer_0.pop();
     };
     /**
     * Adiciona no mundo
@@ -229,43 +230,69 @@ class Transmissao {
             B = [this.barrB.p.x, this.barrB.body.position.y + this.slings[0].pointB.y, -(this.barrB.body.position.x + this.slings[0].pointB.x - this.barrB.p.x)],
             C = [this.barrB.p.x, this.barrB.body.position.y + this.slings[1].pointB.y, -(this.barrB.body.position.x + this.slings[1].pointB.x - this.barrB.p.x)],
             D = [this.barrA.p.x, this.barrA.body.position.y + this.slings[1].pointA.y, -(this.barrA.body.position.x + this.slings[1].pointA.x - this.barrA.p.x)];
-        leftCanva.push();
-        leftCanva.fill(100, 0, 0);
-        leftCanva.beginShape();
-        leftCanva.vertex(A[0], A[1], A[2]);
-        leftCanva.vertex(B[0], B[1], B[2]);
-        leftCanva.vertex(C[0], C[1], C[2]);
-        leftCanva.vertex(D[0], D[1], D[2]);
-        leftCanva.endShape();
-        leftCanva.pop();
+        layer_0.push();
+        layer_0.fill(100, 0, 0);
+        layer_0.beginShape();
+        layer_0.vertex(A[0], A[1], A[2]);
+        layer_0.vertex(B[0], B[1], B[2]);
+        layer_0.vertex(C[0], C[1], C[2]);
+        layer_0.vertex(D[0], D[1], D[2]);
+        layer_0.endShape();
+        layer_0.pop();
 
         let E = [this.barrA.p.x, this.barrA.body.position.y + this.slings[2].pointA.y, -(this.barrA.body.position.x + this.slings[2].pointA.x - this.barrA.p.x)],
             F = [this.barrB.p.x, this.barrB.body.position.y + this.slings[2].pointB.y, -(this.barrB.body.position.x + this.slings[2].pointB.x - this.barrB.p.x)],
             G = [this.barrB.p.x, this.barrB.body.position.y + this.slings[3].pointB.y, -(this.barrB.body.position.x + this.slings[3].pointB.x - this.barrB.p.x)],
             H = [this.barrA.p.x, this.barrA.body.position.y + this.slings[3].pointA.y, -(this.barrA.body.position.x + this.slings[3].pointA.x - this.barrA.p.x)];
-        leftCanva.fill(100, 0, 0);
-        leftCanva.beginShape();
-        leftCanva.vertex(E[0], E[1], E[2]);
-        leftCanva.vertex(F[0], F[1], F[2]);
-        leftCanva.vertex(G[0], G[1], G[2]);
-        leftCanva.vertex(H[0], H[1], H[2]);
-        leftCanva.endShape();
-        leftCanva.fill(180, 0, 0);
-        leftCanva.beginShape();
-        leftCanva.vertex(E[0], E[1], E[2]);
-        leftCanva.vertex(F[0], F[1], F[2]);
-        leftCanva.vertex(C[0], C[1], C[2]);
-        leftCanva.vertex(D[0], D[1], D[2]);
-        leftCanva.endShape();
-        leftCanva.fill(180, 0, 0);
-        leftCanva.beginShape();
-        leftCanva.vertex(A[0], A[1], A[2]);
-        leftCanva.vertex(B[0], B[1], B[2]);
-        leftCanva.vertex(G[0], G[1], G[2]);
-        leftCanva.vertex(H[0], H[1], H[2]);
-        leftCanva.endShape();
+        layer_0.fill(100, 0, 0);
+        layer_0.beginShape();
+        layer_0.vertex(E[0], E[1], E[2]);
+        layer_0.vertex(F[0], F[1], F[2]);
+        layer_0.vertex(G[0], G[1], G[2]);
+        layer_0.vertex(H[0], H[1], H[2]);
+        layer_0.endShape();
+        layer_0.fill(180, 0, 0);
+        layer_0.beginShape();
+        layer_0.vertex(E[0], E[1], E[2]);
+        layer_0.vertex(F[0], F[1], F[2]);
+        layer_0.vertex(C[0], C[1], C[2]);
+        layer_0.vertex(D[0], D[1], D[2]);
+        layer_0.endShape();
+        layer_0.fill(180, 0, 0);
+        layer_0.beginShape();
+        layer_0.vertex(A[0], A[1], A[2]);
+        layer_0.vertex(B[0], B[1], B[2]);
+        layer_0.vertex(G[0], G[1], G[2]);
+        layer_0.vertex(H[0], H[1], H[2]);
+        layer_0.endShape();
     }
     addWorld() {
         Matter.World.add(engine.world, [this.slings[0], this.slings[1], this.slings[2], this.slings[3]]);
     }
 }
+/**
+ * Classe para criar um grupo de objetos
+ * @class Grupo
+ */
+ class Grupo{
+    /** Constroe Grupo, forncer o tamanho do array que irá possuir esse grupo
+     * @method constructor
+     * @param {number} length
+     */
+    constructor(length){
+        this.id=length;
+        this.ativo=true;
+        this.partes=[];
+    }
+    draw(){
+        for (let element in this.partes){
+            this.partes[element].draw();
+        }
+    }
+ }
+
+ function novoGrupo(){
+    grupos[grupos.length]=new Grupo(grupos.length);
+    grupos[grupos.length-1].partes[0]=new Gerador(0,-(grupos.length-1)*500);
+    grupos[grupos.length-1].partes[0].addWorld();
+ }
