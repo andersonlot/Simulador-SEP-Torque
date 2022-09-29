@@ -4,8 +4,7 @@
  */
 class Gerador {
     /**
-    * Define o Gerador
-    * @method constructor
+    * Define a posição do Gerador
     * @param {number} xPosition
     * @param {number} yPosition
     */
@@ -29,6 +28,7 @@ class Gerador {
             frictionStatic: 1,
             stiffness: 1
         });
+        this.addWorld();
     };
     /**
     * Desenha o Gerador
@@ -60,13 +60,18 @@ class Gerador {
     }
 };
 
+
 /**
  * Classe para criar um objeto do tipo barramento elétrico
  * @class Barramento
- * @param {number} xPosition
- * @param {number} yPosition
  */
 class Barramento {
+    /**
+     * Define a posição do Barramento
+     * @param {number} xPosition 
+     * @param {number} yPosition 
+     */
+    
     constructor(xPosition, yPosition) {
         this.type = "barramento";
         this.size = 200;
@@ -88,9 +93,8 @@ class Barramento {
         });
     };
     /**
-    * Desenha o barramento
-    * @method draw
-    */
+     * Desenha o Barramento
+     */
     draw() {
         layer_0.push();
         layer_0.fill(this.color);
@@ -102,7 +106,6 @@ class Barramento {
     };
     /**
     * Adiciona no mundo
-    * @method addWorld
     */
     addWorld() {
         Matter.World.add(engine.world, [this.pontoFixo, this.body]);
@@ -113,10 +116,13 @@ class Barramento {
 /**
  * Classe para criar um objeto do tipo barramento carga 
  * @class Carga
- * @param {number} xPosition
- * @param {number} yPosition
  */
 class Carga {
+    /**
+     * Define a posição da Carga
+     * @param {number} xPosition 
+     * @param {number} yPosition 
+     */
     constructor(xPosition, yPosition) {
         this.type = "barramento de carga";
         this.size = 200;
@@ -139,7 +145,6 @@ class Carga {
     };
     /**
     * Desenha a carga
-    * @method draw
     */
     draw() {
         layer_0.push();
@@ -152,7 +157,6 @@ class Carga {
     };
     /**
     * Adiciona no mundo
-    * @method addWorld
     */
     addWorld() {
         Matter.World.add(engine.world, [this.pontoFixo, this.body]);
@@ -166,7 +170,6 @@ class Carga {
 class Transmissao {
     /**
      * Infome os dois barramentos que deseja conectar e o valor da condutância ( máximo 1 )
-     * @method constructor
      * @param {Barramento} barrA
      * @param {Barramento} barrB
      * @param {number <= 1} condutividade
@@ -225,6 +228,9 @@ class Transmissao {
             frictionStatic: 1
         });
     }
+    /**
+     * Desenha a Transmissão
+     */
     draw() {
         let A = [this.barrA.p.x, this.barrA.body.position.y + this.slings[0].pointA.y, -(this.barrA.body.position.x + this.slings[0].pointA.x - this.barrA.p.x)],
             B = [this.barrB.p.x, this.barrB.body.position.y + this.slings[0].pointB.y, -(this.barrB.body.position.x + this.slings[0].pointB.x - this.barrB.p.x)],
@@ -276,7 +282,6 @@ class Transmissao {
  */
  class Grupo{
     /** Constroe Grupo, forncer o tamanho do array que irá possuir esse grupo
-     * @method constructor
      * @param {number} length
      */
     constructor(length){
@@ -284,6 +289,9 @@ class Transmissao {
         this.ativo=true;
         this.partes=[];
     }
+    /**
+     * Desenha os elementos do grupo
+     */
     draw(){
         for (let element in this.partes){
             this.partes[element].draw();
@@ -294,5 +302,4 @@ class Transmissao {
  function novoGrupo(){
     grupos[grupos.length]=new Grupo(grupos.length);
     grupos[grupos.length-1].partes[0]=new Gerador(0,-(grupos.length-1)*500);
-    grupos[grupos.length-1].partes[0].addWorld();
  }
