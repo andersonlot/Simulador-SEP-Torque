@@ -36,6 +36,16 @@ function setup() {
 function draw() {
   draw_layer_0();
   document.getElementById('botao_novo_grupo').addEventListener("click",novoGrupo);
+  for(let i=0;i<grupos.length;i++){
+    let item=['gerador','barramento','carga'];
+    for(let j=0;j<item.length;j++){
+      if(grupos[i].ativo){
+      let botao_adiciona=document.getElementById('adiciona_'+item[j]+'_'+grupos[i].id);
+      botao_adiciona.addEventListener("click",adicionaItemGrupo);
+      botao_adiciona.parametro=[grupos[i].id,item[j]];
+      }
+    }
+  }
 }
 
 function mouseOverCavasListener(){

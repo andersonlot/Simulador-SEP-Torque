@@ -9,8 +9,8 @@ class Gerador {
     * @param {number} yPosition
     * @param {number} id
     */
-    constructor(xPosition, yPosition,id) {
-        this.id=id;
+    constructor(xPosition, yPosition, id) {
+        this.id = id;
         this.type = "gerador";
         this.size = 200;
         this.p = { x: xPosition || 0, y: yPosition || 0 };
@@ -74,9 +74,9 @@ class Barramento {
      * @param {number} yPosition 
      * @param {number} id
      */
-    
-    constructor(xPosition, yPosition,id) {
-        this.id=id;
+
+    constructor(xPosition, yPosition, id) {
+        this.id = id;
         this.type = "barramento";
         this.size = 200;
         this.p = { x: xPosition || 0, y: yPosition || 0 };
@@ -130,8 +130,8 @@ class Carga {
      * @param {number} yPosition 
      * @param {number} id
      */
-    constructor(xPosition, yPosition,id) {
-        this.id=id;
+    constructor(xPosition, yPosition, id) {
+        this.id = id;
         this.type = "barramento de carga";
         this.size = 200;
         this.p = { x: xPosition || 0, y: yPosition || 0 };
@@ -184,8 +184,8 @@ class Transmissao {
      * @param {number <= 1} condutividade
      * @param {number} id
      */
-    constructor(barrA, barrB, condutividade,id) {
-        this.id=id;
+    constructor(barrA, barrB, condutividade, id) {
+        this.id = id;
         this.barrA = barrA;
         this.barrB = barrB;
         let stiffnessValue = condutividade;
@@ -292,38 +292,94 @@ class Transmissao {
  * Classe para criar um grupo de objetos
  * @class Grupo
  */
- class Grupo{
+class Grupo {
     /** Constroe Grupo, forncer o tamanho do array que irá possuir esse grupo
      * @param {number} length
      */
-    constructor(length){
-        this.id=length;
-        this.ativo=true;
-        this.partes=[];
+    constructor(length) {
+        this.id = length;
+        this.ativo = true;
+        this.partes = [];
     }
     /**
      * Desenha os elementos do grupo
      */
-    draw(){
-        for (let element in this.partes){
+    draw() {
+        for (let element in this.partes) {
             this.partes[element].draw();
         }
     }
- }
+}
 
- function novoGrupo(){
-    grupos[grupos.length]=new Grupo(grupos.length);
-    grupos[grupos.length-1].partes[0]=new Gerador(0,-(grupos.length-1)*500,0);
-    grupos[grupos.length-1].partes[1]=new Barramento(300,-(grupos.length-1)*500,1);
-    grupos[grupos.length-1].partes[2]=new Carga(600,-(grupos.length-1)*500,2);
-    grupos[grupos.length-1].partes[3]=new Transmissao(grupos[grupos.length-1].partes[0],grupos[grupos.length-1].partes[1],0.005,3);
-    grupos[grupos.length-1].partes[4]=new Transmissao(grupos[grupos.length-1].partes[1],grupos[grupos.length-1].partes[2],0.0005,4);
+function novoGrupo() {
+    newId=getNewGrupoId();
+    grupos[grupos.length] = new Grupo(newId);
+    let ele = document.getElementById('dados_grupos');
+    let id = newId;
+    ele.innerHTML += '<div class="dados_grupo" id="div_grupo_' + id
+        + '" ><p class="nome_grupo">Grupo ' + id
+        + '</p><p class="adicionar">Adicionar: <input class="adiciona_partes" id="adiciona_gerador_' + id
+        + '" type="submit" name="button" value="Gerador"/><input class="adiciona_partes" id="adiciona_barramento_' + id
+        + '" type="submit" name="button" value="Barramento"/><input class="adiciona_partes" id="adiciona_carga_' + id
+        + '" type="submit" name="button" value="Carga"/></p></div>'
 
-    let ele = document.getElementById('dados_grupo');
-    ele.innerHTML += '<p class="nome_grupo">Grupo '+grupos[grupos.length-1].id
-    +'</p><p class="item_grupo">'+ grupos[grupos.length-1].partes[0].id +' - '+grupos[grupos.length-1].partes[0].type
-    +'</p><p class="item_grupo">'+ grupos[grupos.length-1].partes[1].id +' - '+grupos[grupos.length-1].partes[1].type
-    +'</p><p class="item_grupo">'+ grupos[grupos.length-1].partes[2].id +' - '+grupos[grupos.length-1].partes[2].type
-    +'</p>';
-    
- }
+
+}
+
+/**
+ * Adiciona Item ao Grupo, "gerador" "barramento" "carga"
+ * @method adiconaItemGrupo
+ * @param {number} idGrupo 
+ * @param {string} item 
+ */
+function adicionaItemGrupo(event) {
+    let idGrupo = event.currentTarget.parametro[0];
+    let item = event.currentTarget.parametro[1];
+    let ele = document.getElementById('div_grupo_' + idGrupo);
+    let idArrayGrupo=getIdArrayGrupo(idGrupo)
+    let idItem=grupos[idArrayGrupo].partes.length;
+    switch (item) {
+        case 'gerador': {
+            grupos[idArrayGrupo].partes[idItem] = new Gerador(idItem*300, -(idGrupo) * 500, 0);
+
+            ele.innerHTML += '<p class="item_grupo">'
+                + idItem + ' - ' + grupos[idArrayGrupo].partes[idItem].type + '</p>'
+            break;
+        }
+        case 'barramento': {
+            grupos[idArrayGrupo].partes[idItem] = new Barramento(idItem*300, -(idGrupo) * 500, 0);
+
+            ele.innerHTML += '<p class="item_grupo">'
+                + idItem + ' - ' + grupos[idArrayGrupo].partes[idItem].type + '</p>'
+            break;
+        }
+        case 'carga': {
+            grupos[idArrayGrupo].partes[idItem] = new Carga(idItem*300, -(idGrupo) * 500, 0);
+
+            ele.innerHTML += '<p class="item_grupo">'
+                + idItem + ' - ' + grupos[idArrayGrupo].partes[idItem].type + '</p>'
+
+            break;
+        }
+    }
+    return;
+}
+
+function getIdArrayGrupo(idGrupo){
+for(let element in grupos){
+    if(grupos[element].id==idGrupo){
+    return element;
+    }
+}
+return;
+}
+
+function getNewGrupoId(){
+    let ids=[-1];
+    for(let i=0;i<grupos.length;i++){
+        if(grupos[i].id>Math.max.apply(null,ids)){
+            ids.push(grupos[i].id)
+        }
+    }
+    return Math.max.apply(null,ids)+1;
+}
