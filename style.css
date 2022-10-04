@@ -163,4 +163,14 @@ p.adicionar{
     color:#FFFFFF;
 }
 
+input.deleta_grupo{
+    width:auto;
+    font-size: 7pt;
+    font-weight: bold;
+    margin:5px;
+    margin-left: 15px;
+    color:#FFFFFF;
+    background-color: #2e2e2e;
+}
+
 @media only screen and (max-width: 780px) {}

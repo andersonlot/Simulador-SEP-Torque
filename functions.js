@@ -60,6 +60,9 @@ class Gerador {
     addWorld() {
         Matter.World.add(engine.world, [this.pontoFixo, this.body]);
     }
+    removeWorld() {
+        Matter.World.remove(engine.world, [this.pontoFixo, this.body]);
+    }
 };
 
 
@@ -115,6 +118,9 @@ class Barramento {
     addWorld() {
         Matter.World.add(engine.world, [this.pontoFixo, this.body]);
     }
+    removeWorld() {
+        Matter.World.remove(engine.world, [this.pontoFixo, this.body]);
+    }
 };
 
 
@@ -169,6 +175,9 @@ class Carga {
     */
     addWorld() {
         Matter.World.add(engine.world, [this.pontoFixo, this.body]);
+    }
+    removeWorld() {
+        Matter.World.remove(engine.world, [this.pontoFixo, this.body]);
     }
 };
 
@@ -287,6 +296,10 @@ class Transmissao {
     addWorld() {
         Matter.World.add(engine.world, [this.slings[0], this.slings[1], this.slings[2], this.slings[3]]);
     }
+    removeWorld() {
+        Matter.World.remove(engine.world, [this.slings[0], this.slings[1], this.slings[2], this.slings[3]]);
+    }
+
 }
 /**
  * Classe para criar um grupo de objetos
@@ -309,6 +322,11 @@ class Grupo {
             this.partes[element].draw();
         }
     }
+    removeWorld() {
+        for (let element in this.partes) {
+            this.partes[element].removeWorld();
+        }
+    }
 }
 
 function novoGrupo() {
@@ -317,7 +335,8 @@ function novoGrupo() {
     let ele = document.getElementById('dados_grupos');
     let id = newId;
     ele.innerHTML += '<div class="dados_grupo" id="div_grupo_' + id
-        + '" ><p class="nome_grupo">Grupo ' + id
+        + '" ><p class="nome_grupo">Grupo ' + id + '<input class="deleta_grupo" id="deleta_grupo_' + id
+        + '" type="submit" name="button" value="Excluir"/>'
         + '</p><p class="adicionar">Adicionar: <input class="adiciona_partes" id="adiciona_gerador_' + id
         + '" type="submit" name="button" value="Gerador"/><input class="adiciona_partes" id="adiciona_barramento_' + id
         + '" type="submit" name="button" value="Barramento"/><input class="adiciona_partes" id="adiciona_carga_' + id
@@ -382,4 +401,20 @@ function getNewGrupoId(){
         }
     }
     return Math.max.apply(null,ids)+1;
+}
+
+function deletaGrupo(event){
+    let idGrupo=event.currentTarget.parametro;
+    let idArrayGrupo=getIdArrayGrupo(idGrupo);
+    let parteB=[...grupos];
+    let parteA=parteB.splice(0,idArrayGrupo);
+    parteB.shift();
+    grupos[idArrayGrupo].removeWorld();
+    grupos[idArrayGrupo]=null;
+    grupos=[...parteA,...parteB];
+    let ele = document.getElementById('div_grupo_' + idGrupo);
+    ele.remove();
+
+
+
 }

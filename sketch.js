@@ -2,7 +2,7 @@ let canvas_div; // recieve the canvas when start and when resize window
 let layer_0;
 let Width = window.innerWidth, Height = window.innerHeight-110; // variáveis contendo dimensões do canvas
 let zomm = 1200; // Valor inicial do Zoom ( quanto maior, mais distante)
-const grupos=[];
+let grupos=[];
 
 // variáveis para navegaçao com mouse
 let mouseTemp=[];
@@ -39,6 +39,9 @@ function draw() {
   for(let i=0;i<grupos.length;i++){
     let item=['gerador','barramento','carga'];
     for(let j=0;j<item.length;j++){
+      let botao_exclui=document.getElementById('deleta_grupo_'+grupos[i].id);
+      botao_exclui.addEventListener("click",deletaGrupo);
+      botao_exclui.parametro=grupos[i].id;
       if(grupos[i].ativo){
       let botao_adiciona=document.getElementById('adiciona_'+item[j]+'_'+grupos[i].id);
       botao_adiciona.addEventListener("click",adicionaItemGrupo);
