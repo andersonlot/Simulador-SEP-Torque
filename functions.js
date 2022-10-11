@@ -330,7 +330,7 @@ class Grupo {
 }
 
 function novoGrupo() {
-    newId=getNewGrupoId();
+    newId = getNewGrupoId();
     grupos[grupos.length] = new Grupo(newId);
     let ele = document.getElementById('dados_grupos');
     let id = newId;
@@ -355,25 +355,25 @@ function adicionaItemGrupo(event) {
     let idGrupo = event.currentTarget.parametro[0];
     let item = event.currentTarget.parametro[1];
     let ele = document.getElementById('div_grupo_' + idGrupo);
-    let idArrayGrupo=getIdArrayGrupo(idGrupo)
-    let idItem=grupos[idArrayGrupo].partes.length;
+    let idArrayGrupo = getIdArrayGrupo(idGrupo)
+    let idItem = grupos[idArrayGrupo].partes.length;
     switch (item) {
         case 'gerador': {
-            grupos[idArrayGrupo].partes[idItem] = new Gerador(idItem*300, -(idGrupo) * 500, 0);
+            grupos[idArrayGrupo].partes[idItem] = new Gerador(idItem * 300, -(idGrupo) * 500, 0);
 
             ele.innerHTML += '<p class="item_grupo">'
                 + idItem + ' - ' + grupos[idArrayGrupo].partes[idItem].type + '</p>'
             break;
         }
         case 'barramento': {
-            grupos[idArrayGrupo].partes[idItem] = new Barramento(idItem*300, -(idGrupo) * 500, 0);
+            grupos[idArrayGrupo].partes[idItem] = new Barramento(idItem * 300, -(idGrupo) * 500, 0);
 
             ele.innerHTML += '<p class="item_grupo">'
                 + idItem + ' - ' + grupos[idArrayGrupo].partes[idItem].type + '</p>'
             break;
         }
         case 'carga': {
-            grupos[idArrayGrupo].partes[idItem] = new Carga(idItem*300, -(idGrupo) * 500, 0);
+            grupos[idArrayGrupo].partes[idItem] = new Carga(idItem * 300, -(idGrupo) * 500, 0);
 
             ele.innerHTML += '<p class="item_grupo">'
                 + idItem + ' - ' + grupos[idArrayGrupo].partes[idItem].type + '</p>'
@@ -388,37 +388,37 @@ function adicionaItemGrupo(event) {
  * @param {number} idGrupo 
  * @returns ID array grupo
  */
-function getIdArrayGrupo(idGrupo){
-for(let element in grupos){
-    if(grupos[element].id==idGrupo){
-    return element;
+function getIdArrayGrupo(idGrupo) {
+    for (let element in grupos) {
+        if (grupos[element].id == idGrupo) {
+            return element;
+        }
     }
-}
-return;
+    return;
 }
 /**
  * Pega o próximo ID livre na array grupos.
  * @returns próximo ID livre na array grupos
  */
-function getNewGrupoId(){
-    let ids=[-1];
-    for(let i=0;i<grupos.length;i++){
-        if(grupos[i].id>Math.max.apply(null,ids)){
+function getNewGrupoId() {
+    let ids = [-1];
+    for (let i = 0; i < grupos.length; i++) {
+        if (grupos[i].id > Math.max.apply(null, ids)) {
             ids.push(grupos[i].id)
         }
     }
-    return Math.max.apply(null,ids)+1;
+    return Math.max.apply(null, ids) + 1;
 }
 /**
  * Deleta um item do grupo utilizando parametro interno do botão
  * @param {*} event 
  */
-function deletaGrupo(event){
-    let idGrupo=event.currentTarget.parametro;
-    let idArrayGrupo=getIdArrayGrupo(idGrupo);
+function deletaGrupo(event) {
+    let idGrupo = event.currentTarget.parametro;
+    let idArrayGrupo = getIdArrayGrupo(idGrupo);
     grupos[idArrayGrupo].removeWorld();
-    grupos[idArrayGrupo]=null;
-    grupos.splice(idArrayGrupo,1);
+    grupos[idArrayGrupo] = null;
+    grupos.splice(idArrayGrupo, 1);
     let ele = document.getElementById('div_grupo_' + idGrupo);
     ele.remove();
 }
@@ -426,14 +426,85 @@ function deletaGrupo(event){
  * Calcula média da posição Y do foco da camera com Base nos grupos existentes
  * @returns média do foco Y da camera
  */
-function calculaMediaYFoco(){
-    if(grupos.length>0){
-        let yMin=grupos[0].id*500;
-        let yMax=grupos[grupos.length-1].id*500;
-        let yMedio=-(yMin+yMax)/2
+function calculaMediaYFoco() {
+    if (grupos.length > 0) {
+        let yMin = grupos[0].id * 500;
+        let yMax = grupos[grupos.length - 1].id * 500;
+        let yMedio = -(yMin + yMax) / 2
         return yMedio;
     }
     return 0;
-    
+
 }
+
+
+
+let Camera = {
+    posicao: {
+        x: 0,
+        y: 0,
+        z: 0
+    },
+    foco: {
+        x: 0,
+        y: 0,
+        z: 0
+    },
+    zomm: 1200, // Valor inicial do Zoom ( quanto maior, mais distante)
+    att: function () {
+        this.mouseDrag.lerp();
+        this.posicao.x = this.zomm * sin(this.mouseDrag.drag_value_lerp[0] / 100);
+        this.posicao.y = calculaMediaYFoco() + 10 * this.mouseDrag.drag_value_lerp[1];
+        this.posicao.z = this.zomm * cos(this.mouseDrag.drag_value_lerp[0] / 100);
+        this.foco.x = 300;
+        this.foco.y = calculaMediaYFoco();
+        this.foco.z = 0;
+    },
+    run: function (layer) {
+        this.att();
+        layer.camera(
+            this.posicao.x,
+            this.posicao.y,
+            this.posicao.z,
+            this.foco.x,
+            this.foco.y,
+            this.foco.z
+        )
+    },
+    attZoom: function (event) {
+        this.zomm += event.delta;
+        this.zomm = Math.max(Math.min(3000, this.zomm), 100);
+    },
+    mouseDrag: {
+        mouseTemp: [],
+        drag_value: [],
+        drag_total_value: [-25, -62],
+        drag_total_value_temp: [-25, -62],
+        drag_value_lerp: [100, -10],
+        att: function () {
+            this.drag_value = [-mouseX + this.mouseTemp[0], -mouseY + this.mouseTemp[1]];
+            this.drag_total_value[0] = this.drag_total_value_temp[0] + 0.005 * this.drag_value[0];
+            this.drag_total_value[1] = this.drag_total_value_temp[1] + 0.005 * this.drag_value[1];
+            this.drag_total_value[1] = Math.max(Math.min(1000, this.drag_total_value[1]), -1000);
+        },
+        reset: function () {
+            this.drag_total_value_temp = this.drag_total_value;
+        },
+        set: function () {
+            this.mouseTemp = [mouseX, mouseY];
+        },
+        lerp: function () {
+            if (Math.abs(this.drag_total_value[0] - this.drag_value_lerp[0]) > 1.5) {
+                this.drag_value_lerp[0] = lerp(this.drag_value_lerp[0], this.drag_total_value[0], 0.1);
+            } else {
+                this.drag_value_lerp[0] = this.drag_total_value[0];
+            }
+            if (Math.abs(this.drag_total_value[1] - this.drag_value_lerp[1]) > 1.5) {
+                this.drag_value_lerp[1] = lerp(this.drag_value_lerp[1], this.drag_total_value[1], 0.15);
+            } else {
+                this.drag_value_lerp[1] = this.drag_total_value[1];
+            }
+        },
+    },
+};
 
