@@ -383,7 +383,11 @@ function adicionaItemGrupo(event) {
     }
     return;
 }
-
+/**
+ * Converte o ID do grupo para o ID do array correspondente
+ * @param {number} idGrupo 
+ * @returns ID array grupo
+ */
 function getIdArrayGrupo(idGrupo){
 for(let element in grupos){
     if(grupos[element].id==idGrupo){
@@ -392,7 +396,10 @@ for(let element in grupos){
 }
 return;
 }
-
+/**
+ * Pega o próximo ID livre na array grupos.
+ * @returns próximo ID livre na array grupos
+ */
 function getNewGrupoId(){
     let ids=[-1];
     for(let i=0;i<grupos.length;i++){
@@ -402,19 +409,31 @@ function getNewGrupoId(){
     }
     return Math.max.apply(null,ids)+1;
 }
-
+/**
+ * Deleta um item do grupo utilizando parametro interno do botão
+ * @param {*} event 
+ */
 function deletaGrupo(event){
     let idGrupo=event.currentTarget.parametro;
     let idArrayGrupo=getIdArrayGrupo(idGrupo);
-    let parteB=[...grupos];
-    let parteA=parteB.splice(0,idArrayGrupo);
-    parteB.shift();
     grupos[idArrayGrupo].removeWorld();
     grupos[idArrayGrupo]=null;
-    grupos=[...parteA,...parteB];
+    grupos.splice(idArrayGrupo,1);
     let ele = document.getElementById('div_grupo_' + idGrupo);
     ele.remove();
-
-
-
 }
+/**
+ * Calcula média da posição Y do foco da camera com Base nos grupos existentes
+ * @returns média do foco Y da camera
+ */
+function calculaMediaYFoco(){
+    if(grupos.length>0){
+        let yMin=grupos[0].id*500;
+        let yMax=grupos[grupos.length-1].id*500;
+        let yMedio=-(yMin+yMax)/2
+        return yMedio;
+    }
+    return 0;
+    
+}
+
