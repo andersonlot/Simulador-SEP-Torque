@@ -355,28 +355,29 @@ function adicionaItemGrupo(event) {
     let idGrupo = event.currentTarget.parametro[0];
     let item = event.currentTarget.parametro[1];
     let ele = document.getElementById('div_grupo_' + idGrupo);
-    let idArrayGrupo = getIdArrayGrupo(idGrupo)
-    let idItem = grupos[idArrayGrupo].partes.length;
+    let idArrayGrupo = getIdArrayGrupo(idGrupo);
+    let idItem = getNewPartesId(idGrupo);
+    let idArrayItem = grupos[idArrayGrupo].partes.length;
     switch (item) {
         case 'gerador': {
-            grupos[idArrayGrupo].partes[idItem] = new Gerador(idItem * 300, -(idGrupo) * 500, 0);
+            grupos[idArrayGrupo].partes[idArrayItem] = new Gerador(idItem * 300, -(idGrupo) * 500, idItem);
 
-            ele.innerHTML += '<p class="item_grupo">'
-                + idItem + ' - ' + grupos[idArrayGrupo].partes[idItem].type + '</p>'
+            ele.innerHTML += '<p class="item_grupo" id="item_'+idItem+'_grupo_'+idGrupo+'">'
+                + idItem + ' - ' + grupos[idArrayGrupo].partes[idArrayItem].type + '<input class="exclui_partes" id="exclui_partes_'+idItem+'_'+idGrupo+'" type="submit" name="button" value="X"/></p>'
             break;
         }
         case 'barramento': {
-            grupos[idArrayGrupo].partes[idItem] = new Barramento(idItem * 300, -(idGrupo) * 500, 0);
+            grupos[idArrayGrupo].partes[grupos[idArrayGrupo].partes.length] = new Barramento(idItem * 300, -(idGrupo) * 500, idItem);
 
-            ele.innerHTML += '<p class="item_grupo">'
-                + idItem + ' - ' + grupos[idArrayGrupo].partes[idItem].type + '</p>'
+            ele.innerHTML += '<p class="item_grupo" id="item_'+idItem+'_grupo_'+idGrupo+'">'
+                + idItem + ' - ' + grupos[idArrayGrupo].partes[idArrayItem].type + '<input class="exclui_partes" id="exclui_partes_'+idItem+'_'+idGrupo+'" type="submit" name="button" value="X"/></p>'
             break;
         }
         case 'carga': {
-            grupos[idArrayGrupo].partes[idItem] = new Carga(idItem * 300, -(idGrupo) * 500, 0);
+            grupos[idArrayGrupo].partes[grupos[idArrayGrupo].partes.length] = new Carga(idItem * 300, -(idGrupo) * 500, idItem);
 
-            ele.innerHTML += '<p class="item_grupo">'
-                + idItem + ' - ' + grupos[idArrayGrupo].partes[idItem].type + '</p>'
+            ele.innerHTML += '<p class="item_grupo" id="item_'+idItem+'_grupo_'+idGrupo+'">'
+                + idItem + ' - ' + grupos[idArrayGrupo].partes[idArrayItem].type + '<input class="exclui_partes" id="exclui_partes_'+idItem+'_'+idGrupo+'" type="submit" name="button" value="X"/></p>'
 
             break;
         }
@@ -396,6 +397,24 @@ function getIdArrayGrupo(idGrupo) {
     }
     return;
 }
+
+/**
+ * Converte o ID da parte para o ID do array correspondente
+ * @param {number} idParte 
+ * @param {number} idGrupo
+ * @returns ID array parte
+ */
+function getIdArrayParte(idParte,idGrupo) {
+    for (let element in grupos[getIdArrayGrupo(idGrupo)].partes) {
+        if (grupos[getIdArrayGrupo(idGrupo)].partes[element].id == idParte) {
+            return element;
+        }
+    }
+    return;
+}
+
+
+
 /**
  * Pega o próximo ID livre na array grupos.
  * @returns próximo ID livre na array grupos
@@ -409,6 +428,40 @@ function getNewGrupoId() {
     }
     return Math.max.apply(null, ids) + 1;
 }
+
+/**
+ * Pega o próximo ID livre na array partes.
+ * @returns próximo ID livre na array partes
+ */
+function getNewPartesId(idGrupo) {
+    let encontrado = false;
+    let idProcurado = 0;
+    while(encontrado==false){
+        let teste=false;
+        for(let elemento in grupos[getIdArrayGrupo(idGrupo)].partes){
+            if(grupos[getIdArrayGrupo(idGrupo)].partes[elemento].id==idProcurado){
+                teste=true;
+            }           
+        }
+        if(teste){
+            idProcurado++;
+        }
+        if(teste==false){
+            encontrado=true;
+        }
+    }
+    return idProcurado;
+     /*
+    let ids = [-1];
+    for (let i = 0; i < grupos[getIdArrayGrupo(idGrupo)].partes.length; i++) {
+        if (grupos[getIdArrayGrupo(idGrupo)].partes[i].id > Math.max.apply(null, ids)) {
+            ids.push(grupos[getIdArrayGrupo(idGrupo)].partes[i].id)
+        }
+    }
+    return Math.max.apply(null, ids) + 1;
+    */
+}
+
 /**
  * Deleta um item do grupo utilizando parametro interno do botão
  * @param {*} event 
@@ -422,6 +475,22 @@ function deletaGrupo(event) {
     let ele = document.getElementById('div_grupo_' + idGrupo);
     ele.remove();
 }
+
+/**
+ * Deleta uma parte de um grupo utilizando parametro interno do botão
+ * @param {*} event 
+ */
+function deletaParte(event) {
+    let id = event.currentTarget.parametro;
+    let idArrayGrupo = getIdArrayGrupo(id[0]);
+    let idArrayParte = getIdArrayParte(id[1],id[0]);
+    grupos[idArrayGrupo].partes[idArrayParte].removeWorld();
+    grupos[idArrayGrupo].partes[idArrayParte] = null;
+    grupos[idArrayGrupo].partes.splice(idArrayParte, 1);
+    let ele = document.getElementById('item_'+id[1]+'_grupo_' + id[0]);
+    ele.remove();
+}
+
 /**
  * Calcula média da posição Y do foco da camera com Base nos grupos existentes
  * @returns média do foco Y da camera

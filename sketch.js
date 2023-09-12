@@ -42,6 +42,11 @@ function draw() {
         botao_adiciona.parametro = [grupos[i].id, item[j]];
       }
     }
+    for(let ii=0; ii<grupos[i].partes.length; ii++) {
+      let botao_exclui_parte = document.getElementById('exclui_partes_'+grupos[i].partes[ii].id+'_'+grupos[i].id);
+      botao_exclui_parte.addEventListener('click', deletaParte);
+      botao_exclui_parte.parametro = [grupos[i].id,grupos[i].partes[ii].id];
+    }   
   }
 }
 
