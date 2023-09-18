@@ -2,6 +2,7 @@ let canvas_div; // recieve the canvas when start and when resize window
 let layer_0;
 let Width = window.innerWidth, Height = window.innerHeight - 110; // variáveis contendo dimensões do canvas
 let grupos = [];
+let transmissoes = [];
 
 
 // Calling for Matter.js library
@@ -73,7 +74,9 @@ function draw_layer_0() {
   for (let element in grupos) {
     grupos[element].draw();
   }
-
+  for (let element in transmissoes) {
+    transmissoes[element].draw();
+  }
   // termina aqui o conteúdo
   desenhaLinhasGuia();
 
